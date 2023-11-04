@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const { MongoClient, ServerApiVersion, ObjectId} = require('mongodb');
 const port = process.env.PORT || 4000;
 
 // middleware
@@ -16,7 +17,7 @@ app.use(express.json())
 // mongo db code here
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+
 const uri = "mongodb+srv://rejaulrasel05:P2QX7JEO7Ylr0Zy9@cluster0.60rxy3y.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -39,22 +40,29 @@ async function run() {
         const database = client.db('users-app');
         const usersCollection = database.collection('users');
 
-
-        // get all user
         app.get('/users', async (req, res) => {
-            const cursor = usersCollection.find({})
-            const result = await cursor.toArray()
-            console.log(result)
-            res.send(result)
+            const cursor = usersCollection.find();
+            const result = await cursor.toArray();
+            // console.log(result)
+            res.send(result);
         })
-
-
+        
         // post all user
         app.post('/users', async (req, res) => {
             const user = req.body;
-            console.log('post api hitted', user)
+            // console.log('post api hitted', user)
             const result = await usersCollection.insertOne(user);
             res.send(result)
+        })
+
+        //delete a user
+        app.delete('/delete/:id', async (req, res) => {
+            const id = req.params.id
+            console.log('delete id = ',id)
+            const query = { _id : new ObjectId(id)}
+            const result = await usersCollection.deleteOne(query);
+            res.send(result)
+
         })
 
 
