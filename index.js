@@ -33,9 +33,52 @@ async function run() {
         console.log('uri=', uri)
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
+
+
+
+        const database = client.db('users-app');
+        const usersCollection = database.collection('users');
+
+
+        // get all user
+        app.get('/users', async (req, res) => {
+            const cursor = usersCollection.find({})
+            const result = await cursor.toArray()
+            console.log(result)
+            res.send(result)
+        })
+
+
+        // post all user
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            console.log('post api hitted', user)
+            const result = await usersCollection.insertOne(user);
+            res.send(result)
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+
+
+
+
 
     } finally {
         // Ensures that the client will close when you finish/error
