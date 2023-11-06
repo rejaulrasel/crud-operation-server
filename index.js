@@ -78,14 +78,15 @@ async function run() {
             const userData = req.body;
             const filter = { _id : new ObjectId(id)}
             const updatedData = {
-                $set: userData
+                $set: {
+                    name: userData.name,
+                    address: userData.address
+                }
             }
             const options = { upsert: true };
             const result = await usersCollection.updateOne(filter, updatedData, options)
-            res.send(result)
-            // console.log(result)
-            // const user = await usersCollection.findOne(filter)
-            // res.send(user)
+            const user = await usersCollection.findOne(filter)
+            res.send({result, user})
         })
 
 
