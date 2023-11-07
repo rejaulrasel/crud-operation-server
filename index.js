@@ -54,13 +54,21 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/users/singleUser/:id', async (req, res) => {
+            const id = req.params.id;
+            // console.log(id)
+            const query = { id : id}
+            const result = await usersCollection.findOne(query)
+            res.send(result)
+        })
+
 
         // post all user
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user)
             res.send(result)
-            // console.log('post api hitted', user);
+            console.log('post api hitted', user);
         })
 
         // delete a user
